@@ -1,0 +1,24 @@
+# Secrets — NEVER commit these
+.env
+.env.*
+*.env
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Project notes (internal)
+SESSION_HANDOFF.md
