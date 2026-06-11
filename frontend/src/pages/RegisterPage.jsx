@@ -19,12 +19,12 @@ const RegisterPage = () => {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    validateEmail(email);
+    const isEmailValid = validateEmail(email);
 
-    validatePassword(password);
+    const isPasswordValid = validatePassword(password);
 
 
-    if (emailErrorMsg != "" || passwordErrorMsg != "") {
+    if (!isEmailValid || !isPasswordValid) {
       setMessage("Invalid Email or Password , please try again");
       return;
     }
@@ -59,16 +59,21 @@ const RegisterPage = () => {
       });
   };
 
+  // check email , return true or false
   function validateEmail(email) {
     const emailRegex = /^\S+@\S+\.\S{2,3}$/;
     if (!emailRegex.test(email)) {
       // failed condition
       setEmailErrorMsg("Invalid email, please try again");
+      return false;
     } else {
       setEmailErrorMsg("");
+      return true;
     }
   }
 
+
+  // check password ,return true or false
   function validatePassword(pass) {
     const passwordRegex =
       /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
@@ -77,8 +82,10 @@ const RegisterPage = () => {
       setPasswordErrorMsg(
         "Invalid password, a password should have at least 6 characters, 1 uppercase, 1 lowercase, 1 special char and 1 number",
       );
+      return false;
     } else {
       setPasswordErrorMsg("");
+      return true;
     }
   }
 
@@ -93,16 +100,16 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex-col items-center justify-center">
+    <div className="flex flex-col items-center mb-4">
       <div
         onClick={handleGoToHomepage}
-        className="flex items-center justify-center gap-2 font-bold text-3xl mt-4 cursor-pointer"
+        className="flex items-center justify-center gap-2 font-bold text-xl sm:text-3xl mt-4 cursor-pointer"
       >
-        <MdLaptop className="text-2xl" /> Laptop Inventory management
+        <MdLaptop className="sm:text-2xl" /> Laptop Inventory management
       </div>
       <form
         onSubmit={handleRegister}
-        className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[450px] h-[600px] rounded-3xl p-4 mx-auto mt-20 relative"
+        className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] rounded-3xl p-4 mx-auto mt-20 relative"
       >
         <h1 className="font-bold text-xl">Register to your account</h1>
         <p className="text-[#888888]">
@@ -155,17 +162,17 @@ const RegisterPage = () => {
           {passwordErrorMsg? <div className="text-red-400">{passwordErrorMsg}</div>:""}
         </div>
 
-        <div className="absolute bottom-25 flex items-center justify-center w-full ">
+        <div className="mt-10 flex items-center justify-center w-full ">
           <button
-            className="w-full mr-6 px-4 py-2 text-xl bg-[#b0b0b0] text-black rounded-xl cursor-pointer"
+            className="w-full px-4 py-2 text-xl bg-[#b0b0b0] text-black rounded-xl cursor-pointer"
             type="submit"
           >
             Register
           </button>
         </div>
 
-        <div className="absolute bottom-10 flex justify-center items-center">
-          <p className="mr-2">
+        <div className="mt-4 flex justify-center items-center">
+          <p className="">
             if you have alredy registerd, then please signin to continue{" "}
             <Link to="/login">
               <button className="text-blue-300 underline cursor-pointer">
@@ -177,7 +184,7 @@ const RegisterPage = () => {
       </form>
 
       {message ? (
-        <div className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[450px] h-[80px] rounded-3xl p-4 mx-auto mt-4">
+        <div className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] h-[80px] rounded-3xl p-4 mx-auto mt-4">
           {message}
         </div>
       ) : (
