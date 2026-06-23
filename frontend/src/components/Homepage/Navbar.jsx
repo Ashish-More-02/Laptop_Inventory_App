@@ -1,11 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdLaptop } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  const { logout, login } = useContext(AuthContext);
+
+  // todo: google search about - "how to check jwt token expiration time on frontend and implement the logic here"
+
+  // only checks if user has logged in previously.
+  const checkUserLogin = () => {
+    if (localStorage.getItem("token")) {
+      setIsUserLoggedIn(true);
+    } else {
+      setIsUserLoggedIn(false);
+    }
+  };
+
+  // checks user login status and token expiry 
+  const checkUserLoginAndTokenExpiry = () => {
+    if (localStorage.getItem("token")) {
+      setIsUserLoggedIn(true);
+
+      const token = localStorage.getItem("token");
+      // JSON.parse()
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      console.log(payload);
+
+      // console.log(Date.now());
+
+      // exp is in seconds , we need to convert it to milliseconds
+      const expiryDate = payload.exp * 1000 < Date.now();
+
+      if (expiryDate) {
+        localStorage.removeItem("token");
+        logout();
+      }
+    } else {
+      console.log("No token present");
+      setIsUserLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    checkUserLoginAndTokenExpiry();
+  }, []);
 
   return (
     <div className="sticky top-0 rounded-4xl backdrop-blur-lg bg-[#292929c6] border-[0.8px]  border-[#333333] m-2">
@@ -48,25 +93,38 @@ const Navbar = () => {
           </div>
         </ul>
 
-        {/* login and register buttons */}
-        <div className="hidden sm:flex items-center justify-center">
-          <button
-            onClick={() => {
-              navigate("/login");
-            }}
-            className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mr-2"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => {
-              navigate("/register");
-            }}
-            className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer sm:mr-2"
-          >
-            Register
-          </button>
-        </div>
+        {isUserLoggedIn ? (
+          <div className="hidden sm:flex items-center justify-center">
+            <button
+              onClick={() => {
+                navigate("/dashboard");
+              }}
+              className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mr-2"
+            >
+              Dashboard
+            </button>
+          </div>
+        ) : (
+          <div className="hidden sm:flex items-center justify-center">
+            {/* login and register buttons */}
+            <button
+              onClick={() => {
+                navigate("/login");
+              }}
+              className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mr-2"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => {
+                navigate("/register");
+              }}
+              className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer sm:mr-2"
+            >
+              Register
+            </button>
+          </div>
+        )}
 
         {/* mobile responsive section - quick items  */}
         <div className="sm:hidden flex items-center justify-center mr-3">
@@ -97,24 +155,37 @@ const Navbar = () => {
             </li>
           </ul>
           {/* login and register buttons */}
-          <div className="grid grid-cols-2 gap-1 px-3">
-            <button
-              onClick={() => {
-                navigate("/login");
-              }}
-              className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mr-2"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => {
-                navigate("/register");
-              }}
-              className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer sm:mr-2"
-            >
-              Register
-            </button>
-          </div>
+          {isUserLoggedIn ? (
+            <div className="grid grid-cols-1">
+              <button
+                onClick={() => {
+                  navigate("/dashboard");
+                }}
+                className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mr-2"
+              >
+                Dashboard
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-1 px-3">
+              <button
+                onClick={() => {
+                  navigate("/login");
+                }}
+                className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mr-2"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/register");
+                }}
+                className="rounded-3xl px-3 sm:px-4 py-1 sm:py-2 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer sm:mr-2"
+              >
+                Register
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         ""

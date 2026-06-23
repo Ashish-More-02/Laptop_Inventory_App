@@ -4,6 +4,7 @@ const { User } = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { model, models } = require("mongoose");
+const { emit } = require("../models/LaptopModel");
 
 // User will register for the first time.
 const signup = async (req, res) => {
@@ -40,10 +41,12 @@ const signin = async (req, res) => {
   // const user = await User.find({ email: email });
 
   // so we have to use findOne() function here , which will only return a document ( js object or null)
-  const user = await User.findOne({email: email});
+  const user = await User.findOne({ email: email });
 
   if (!user || user.length == 0) {
-    return res.status(400).json({ error: "Invalid credentials, user not found" });
+    return res
+      .status(400)
+      .json({ error: "Invalid credentials, user not found" });
   }
   console.log(user);
 
@@ -51,8 +54,8 @@ const signin = async (req, res) => {
     // compare password
     const compare = await bcrypt.compare(password, user.password);
 
-    if(!compare){
-      return res.status(401).json({error:"Invalid credentials"});
+    if (!compare) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
     // user found now create a jwt and assing to user
@@ -62,11 +65,48 @@ const signin = async (req, res) => {
 
     return res.json({ token });
   } catch (err) {
-    return res.status(400).json({error: "error in signing in !"});
+    return res.status(400).json({ error: "error in signing in !" });
+  }
+};
+
+// NOTE : this have a major security flaw , that it is publically available and anyone can send a token to get anyusers info
+const userEmail = async (req, res) => {
+  const { userID } = req.body;
+
+  const user = await User.findById(userID);
+
+  if (!user) {
+    return res.status(400).json({ error: "user not found by userId" });
+  } else {
+    console.log(user);
+    return res.status(200).json({ email: user.email, role: user.role });
+  }
+};
+
+const getUserInfo = async (req, res) => {
+  // getting data from the middleware
+  const userID = req.user.userId;
+
+  const userData = await User.findById(userID);
+
+  if (!userData) {
+    return res
+      .status(400)
+      .json({ error: "User data not found or does not exists!" });
+  } else {
+    return res
+      .status(200)
+      .json({
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+      });
   }
 };
 
 module.exports = {
   signup,
   signin,
+  userEmail,
+  getUserInfo,
 };

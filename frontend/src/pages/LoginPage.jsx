@@ -3,12 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdLaptop } from "react-icons/md";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const {login} = useContext(AuthContext);
 
   // we are creating a callback function here.
   const navigate = useNavigate();
@@ -40,7 +44,8 @@ const LoginPage = () => {
         }
       })
       .then((data) => {
-        localStorage.setItem("token", data.token);
+        // localStorage.setItem("token", data.token);
+        login(data.token);
         // success message after the token is stored in localstorage
         setMessage("Login Successful!");
         navigate("/dashboard");

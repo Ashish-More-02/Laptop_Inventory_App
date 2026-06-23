@@ -7,14 +7,14 @@ const checkJWTtoken = async (req,res,next) =>{
     const header = req.headers.authorization;
     
     if(!header){
-        res.status(401).json({error:"Authorization headers not provided, please provide it with JWT token"});
+        return res.status(401).json({error:"Authorization headers not provided, please provide it with JWT token"});
     }
 
     // token conatin "Bearer <token_data>"
     const token = header.split(" ")[1];
 
     if(!token){
-        res.status(401).json({error:"auth token not found !"});
+        return res.status(401).json({error:"auth token not found !"});
     }
 
     // verify token using jwt.verify() method
@@ -28,7 +28,7 @@ const checkJWTtoken = async (req,res,next) =>{
         next();
     }
     catch(err){
-        res.status(401).json({error:"unable to decode jwt token"})
+        return res.status(401).json({error:"unable to decode jwt token"})
     }
 }
 
