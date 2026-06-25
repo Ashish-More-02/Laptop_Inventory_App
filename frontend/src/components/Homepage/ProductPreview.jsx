@@ -1,5 +1,5 @@
 import React from "react";
-import DashboardPreview from "../../assets/dashboard-preview.jpg";
+import DashboardPreview from "../../assets/dashboard-preview.png";
 
 const ProductPreview = () => {
   return (
@@ -7,7 +7,7 @@ const ProductPreview = () => {
       <h2 className="text-4xl text-center mt-4">
         Your Whole inventory, one screen
       </h2>
-      <img className="rounded-4xl mx-auto mt-10 sm:w-[90%] sm:h-[700px] object-cover" src={DashboardPreview} alt="Dashboard preview image" />
+      <img className="rounded-4xl mx-auto mt-10 sm:w-[92%] sm:h-[700px] object-cover" src={DashboardPreview} alt="Dashboard preview image" />
     </div>
   );
 };

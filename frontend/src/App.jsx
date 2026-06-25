@@ -9,6 +9,7 @@ import Homepage from "./pages/Homepage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
+import { LaptopDataProvider } from "./context/LaptopDataContext";
 
 function App() {
   return (
