@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { MdOutlineSettings } from "react-icons/md";
 
-const Sidebar = () => {
-  const [isActive, setIsActive] = useState(1);
+const Sidebar = ({ActiveState}) => {
+  const [isActive, setIsActive] = useState(ActiveState);
   const navigate = useNavigate();
 
   const handleDashboardClick = () => {
@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   const handleSettingsClick = () => {
     setIsActive(3);
-    navigate("");
+    navigate("/settings");
   };
 
   const baseItem = "rounded-2xl px-4 py-2 text-lg cursor-pointer flex items-center";

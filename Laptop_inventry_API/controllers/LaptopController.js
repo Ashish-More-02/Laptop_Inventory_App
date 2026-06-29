@@ -26,6 +26,11 @@ const addLaptop = async (req, res) => {
   // destructuring the values from the request object
   const { name, brand, price, specs } = req.body;
 
+  // input validation.
+  if(!name || !brand || !price || !specs){
+    return res.status(400).json({error:"Any fields should not be empty while Adding a laptop."})
+  }
+
   let userName = await User.findOne({ _id: req.user.userId });
 
   userName = userName.name;

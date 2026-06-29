@@ -1,5 +1,5 @@
 const express = require("express");
-const { signup, signin ,userEmail,getUserInfo} = require("../controllers/AuthController");
+const { signup, signin ,userEmail,getUserInfo,updateName,updatePassword} = require("../controllers/AuthController");
 const { checkJWTtoken } = require("../middleware/CommonMiddleware");
 const router = express.Router();
 
@@ -9,6 +9,9 @@ router.post("/signin",signin);
 router.post("/getuseremail",userEmail);
 
 // protected route with middleware.
-router.get("/me",checkJWTtoken,getUserInfo);
+router.use(checkJWTtoken);
+router.get("/me",getUserInfo);
+router.post("/updatename",updateName);
+router.post("/updatepassword",updatePassword);
 
 module.exports = router;

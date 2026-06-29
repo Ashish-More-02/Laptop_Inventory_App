@@ -11,7 +11,7 @@ const Dashboard = () => {
         <Topbar></Topbar>
 
         <div className="flex flex-row w-full flex-1 min-h-0">
-          <Sidebar></Sidebar>
+          <Sidebar ActiveState={1}></Sidebar>
           <div className="flex-1 flex flex-col min-h-0">
             <StatsSection></StatsSection>
             <MainSection></MainSection>

@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(
     !!localStorage.getItem("token"),
   );
-  const [userEmail,setUserEmail] = useState();
+  const [userEmail, setUserEmail] = useState();
   const [userData, setUserData] = useState();
 
   // using post method : unsafe
@@ -38,20 +38,24 @@ export function AuthProvider({ children }) {
   };
 
   // using get method safe
-  const getUserData = async () =>{
-    const responseObj = await fetch("http://localhost:3000/me",{
-        method:"GET",
-        headers:{
-            "Content-Type":"application/json",
-            "Authorization":"Bearer "+localStorage.getItem("token"),
-        }
-    });
+  const getUserData = async () => {
+    if (!localStorage.getItem("token")) {
+      return;
+    } else {
+      const responseObj = await fetch("http://localhost:3000/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
 
-    const data = await responseObj.json();
+      const data = await responseObj.json();
 
-    console.log(data);
-    setUserData(data);
-  }
+      console.log(data);
+      setUserData(data);
+    }
+  };
 
   useEffect(() => {
     // getUserEmail();
@@ -69,7 +73,15 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ userData, isUserLoggedIn, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        userData,
+        isUserLoggedIn,
+        login,
+        logout,
+        refreshUserData: getUserData,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

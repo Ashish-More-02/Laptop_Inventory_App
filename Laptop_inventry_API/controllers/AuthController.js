@@ -4,7 +4,7 @@ const { User } = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { model, models } = require("mongoose");
-const { emit } = require("../models/LaptopModel");
+const { emit, findOne } = require("../models/LaptopModel");
 
 // User will register for the first time.
 const signup = async (req, res) => {
@@ -94,13 +94,82 @@ const getUserInfo = async (req, res) => {
       .status(400)
       .json({ error: "User data not found or does not exists!" });
   } else {
+    return res.status(200).json({
+      name: userData.name,
+      email: userData.email,
+      role: userData.role,
+    });
+  }
+};
+
+const updateName = async (req, res) => {
+  const updatedName = req.body.name;
+
+  if (!updatedName) {
+    return res.status(400).json({
+      error: "Please enter a new updated name, it should not be empty!",
+    });
+  }
+
+  // data from middleWare
+  const userId = req.user.userId;
+
+  const userData = await User.findOneAndUpdate(
+    { _id: userId },
+    { name: updatedName },
+    { returnDocument: "after", runValidators: true },
+  );
+
+  if (!userData) {
+    return res.status(500).json({
+      error: "Could not find UserID , please try again with valid user data",
+    });
+  } else {
+    return res.status(200).json({ message: "Name Updated successfully!" });
+  }
+};
+
+const updatePassword = async (req, res) => {
+  const updatedPassword = req.body.newPassword;
+  const currentPassword = req.body.currentPassword;
+
+  if (!updatedPassword || updatedPassword.length=="") {
+    return res.status(400).json({
+      error: "New password cannot be empty , please enter a valid password!",
+    });
+  }
+
+  const userId = req.user.userId;
+
+  const userData = await User.findOne({ _id: userId });
+
+  const isCurrentPasswordCorrect = await bcrypt.compare(
+    currentPassword,
+    userData.password,
+  );
+
+  if (isCurrentPasswordCorrect==false) {
     return res
-      .status(200)
-      .json({
-        name: userData.name,
-        email: userData.email,
-        role: userData.role,
-      });
+      .status(400)
+      .json({ error: "Current password does not match , please try again!" });
+  }
+
+  const hashedPassword = await bcrypt.hash(updatedPassword, 10);
+
+  // update the password for the user
+
+  const update = await User.findOneAndUpdate(
+    { _id: userId },
+    { password: hashedPassword },
+    { runValidators: true, returnDocument: "after" },
+  );
+
+  if (!update) {
+    return res
+      .status(400)
+      .json({ error: "Error while updating password, please try again!" });
+  } else {
+    return res.status(200).json({ message: "Password updated successfully!" });
   }
 };
 
@@ -109,4 +178,6 @@ module.exports = {
   signin,
   userEmail,
   getUserInfo,
+  updateName,
+  updatePassword
 };

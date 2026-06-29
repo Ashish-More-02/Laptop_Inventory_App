@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import { LaptopDataProvider } from "./context/LaptopDataContext";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           {/* private routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/settings" element={<Settings />}></Route>
           </Route>
         </Routes>
       </div>
