@@ -4,7 +4,7 @@ const { User } = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { model, models } = require("mongoose");
-const { emit, findOne } = require("../models/LaptopModel");
+const { emit, findOne, base } = require("../models/LaptopModel");
 
 // User will register for the first time.
 const signup = async (req, res) => {
@@ -133,7 +133,7 @@ const updatePassword = async (req, res) => {
   const updatedPassword = req.body.newPassword;
   const currentPassword = req.body.currentPassword;
 
-  if (!updatedPassword || updatedPassword.length=="") {
+  if (!updatedPassword || updatedPassword.length == 0) {
     return res.status(400).json({
       error: "New password cannot be empty , please enter a valid password!",
     });
@@ -148,7 +148,7 @@ const updatePassword = async (req, res) => {
     userData.password,
   );
 
-  if (isCurrentPasswordCorrect==false) {
+  if (isCurrentPasswordCorrect == false) {
     return res
       .status(400)
       .json({ error: "Current password does not match , please try again!" });
@@ -173,11 +173,104 @@ const updatePassword = async (req, res) => {
   }
 };
 
+// Sign in with google
+const signinWithGoogle = async (req, res) => {
+  const baseURL = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+
+  const client_id = process.env.GOOGLE_CLIENT_ID;
+  const redirect_uri = process.env.GOOGLE_REDIRECT_URI;
+  const response_type = "code";
+  const scope = "openid email profile"; // we want permission to use this info from google
+  const state = "Some Random String 123"; // todo: make random string + verify on callback
+  const access_type = "offline";
+
+  baseURL.searchParams.set("client_id", client_id);
+  baseURL.searchParams.set("redirect_uri", redirect_uri);
+  baseURL.searchParams.set("response_type", response_type);
+  baseURL.searchParams.set("scope", scope);
+  baseURL.searchParams.set("state", state);
+  baseURL.searchParams.set("access_type", access_type);
+
+  return res.redirect(baseURL.toString());
+  // final string  = http://accounts.google.com/o/oauth2/v2/auth?client_id=...&redirect_uri=...&response_type=...&scope=...&state=...&access_type=...
+};
+
+// handle google callback
+const handleGoogleCallback = async (req, res) => {
+  // the above redirect url will give us this 'state' and 'code'.
+  const state = req.query.state; // todo: Verify state matches what you sent (CSRF guard)
+  const code = req.query.code;
+
+  const client_id = process.env.GOOGLE_CLIENT_ID;
+  const client_secret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirect_uri = process.env.GOOGLE_REDIRECT_URI;
+
+  // asking google to give us the 'access_token' and 'id_token'
+  const responseObj = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      code: code,
+      client_id: client_id,
+      client_secret: client_secret,
+      redirect_uri: redirect_uri,
+      grant_type: "authorization_code",
+    }),
+  });
+
+  const data = await responseObj.json();
+  console.log("google return data: ", data);
+
+  const id_token_data = jwt.decode(data.id_token);
+  console.log(id_token_data); // name , email , googleId
+
+  // find or create the user into our DB
+
+  const user = await User.findOne({ email: id_token_data.email });
+
+  if (user) {
+    // if user is found , just return the token.
+
+    const user = await User.findOne({email:id_token_data.email});
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    return res.redirect(
+      process.env.CLIENT_URL + "/auth/callback?token=" + token,
+    );
+
+  } else {
+    // create a new account for the user , expected return a mongoose doc with user info.
+    const newUser = await User.create({
+      name: id_token_data.name,
+      email: id_token_data.email,
+      googleId: id_token_data.googleId,
+    });
+
+    // give the frontend jwt
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    // redirect to forntend , because no one is doing a fetch call on this api , so we need to give the token in the form of url
+    // a frontend react page that handles this login flow
+    return res.redirect(
+      process.env.CLIENT_URL + "/auth/callback?token=" + token,
+    );
+  }
+};
+
 module.exports = {
   signup,
   signin,
   userEmail,
   getUserInfo,
   updateName,
-  updatePassword
+  updatePassword,
+  signinWithGoogle,
+  handleGoogleCallback,
 };

@@ -4,6 +4,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { MdLaptop } from "react-icons/md";
+import googleIcon from "../assets/google-icon.png";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -22,7 +23,6 @@ const RegisterPage = () => {
     const isEmailValid = validateEmail(email);
 
     const isPasswordValid = validatePassword(password);
-
 
     if (!isEmailValid || !isPasswordValid) {
       setMessage("Invalid Email or Password , please try again");
@@ -109,7 +109,7 @@ const RegisterPage = () => {
       </div>
       <form
         onSubmit={handleRegister}
-        className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] rounded-3xl p-4 mx-auto mt-20 relative"
+        className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] rounded-3xl p-4 mx-auto mt-12 relative"
       >
         <h1 className="font-bold text-xl">Register to your account</h1>
         <p className="text-[#888888]">
@@ -181,6 +181,20 @@ const RegisterPage = () => {
             </Link>
           </p>
         </div>
+
+        <div className="flex flex-row justify-center items-center mt-4">
+          <hr className="text-[#484848] w-full" />
+          <span className="mx-2">OR</span>
+          <hr className="text-[#484848] w-full" />
+        </div>
+
+        <a
+          href="http://localhost:3000/auth/google"
+          className="flex flex-row justify-center items-center mt-4 w-full px-4 py-2 text-xl bg-[#121212] rounded-xl cursor-pointer"
+        >
+          <img className="h-6 mr-2" src={googleIcon} alt="Google logo" />
+          <span className="text-white text-lg">Sign in with Google</span>
+        </a>
       </form>
 
       {message ? (

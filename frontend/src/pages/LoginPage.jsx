@@ -5,6 +5,7 @@ import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdLaptop } from "react-icons/md";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import googleIcon from "../assets/google-icon.png";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const LoginPage = () => {
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const {login} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   // we are creating a callback function here.
   const navigate = useNavigate();
@@ -57,20 +58,22 @@ const LoginPage = () => {
       });
   };
 
-
-  const handleShowPassword = (e)=>{
+  const handleShowPassword = (e) => {
     e.preventDefault();
 
     setShowPassword(!showPassword);
-  }
+  };
 
-  const handleGoToHomepage = () =>{
+  const handleGoToHomepage = () => {
     navigate("/");
-  }
+  };
 
   return (
     <div className="flex flex-col items-center mb-4">
-      <h1 onClick={handleGoToHomepage} className="flex items-center justify-center gap-2 font-bold text-xl sm:text-3xl mt-4 cursor-pointer">
+      <h1
+        onClick={handleGoToHomepage}
+        className="flex items-center justify-center gap-2 font-bold text-xl sm:text-3xl mt-4 cursor-pointer"
+      >
         <MdLaptop className="sm:text-2xl" /> Laptop Inventory management
       </h1>
       <form
@@ -97,11 +100,14 @@ const LoginPage = () => {
           <label className="text-xl mr-4">Password</label>
           <input
             className="bg-[#292929] w-full text-xl focus:outline-none rounded-xl p-2 border-[0.8px] border-[#333333] mt-1"
-            type={showPassword? "text":"password"}
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div className="absolute bottom-[14px] right-2.5" onClick={handleShowPassword}>
+          <div
+            className="absolute bottom-[14px] right-2.5"
+            onClick={handleShowPassword}
+          >
             {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
         </div>
@@ -125,6 +131,20 @@ const LoginPage = () => {
             </Link>
           </p>
         </div>
+
+        <div className="flex flex-row justify-center items-center mt-4">
+          <hr className="text-[#484848] w-full" />
+          <span className="mx-2">OR</span>
+          <hr className="text-[#484848] w-full" />
+        </div>
+
+        <a
+          href="http://localhost:3000/auth/google"
+          className="flex flex-row justify-center items-center mt-4 w-full px-4 py-2 text-xl bg-[#121212] rounded-xl cursor-pointer"
+        >
+          <img className="h-6 mr-2" src={googleIcon} alt="Google logo" />
+          <span className="text-white text-lg">Sign in with Google</span>
+        </a>
       </form>
 
       {message ? (

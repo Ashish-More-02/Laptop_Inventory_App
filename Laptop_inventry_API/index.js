@@ -26,7 +26,7 @@ app.use("/", authRoutes);
 // laptop routes
 app.use("/api", laptopRoutes);
 
-// errors handled inside this function
+// Connect to mongodb database , errors handled inside this function
 connectDB();
 
 app.listen(PORT, () => {

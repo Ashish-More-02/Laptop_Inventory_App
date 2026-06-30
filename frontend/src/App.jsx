@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import { LaptopDataProvider } from "./context/LaptopDataContext";
 import Settings from "./pages/Settings";
+import GoogleSignInPage from "./pages/GoogleSignInPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<Homepage />}></Route>
           <Route path="/register" element={<RegisterPage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/auth/callback" element={<GoogleSignInPage />}></Route>
 
           {/* private routes */}
           <Route element={<ProtectedRoute />}>

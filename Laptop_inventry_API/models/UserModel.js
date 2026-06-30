@@ -13,12 +13,15 @@ const userSchema = new Schema({
     },
     password:{
         type:String,
-        required:true
+        required:false
     },
     role:{
         type:String,
         enum:["user","admin"],
         default:"user"
+    },
+    googleId:{
+        type:String
     }
 })
 
