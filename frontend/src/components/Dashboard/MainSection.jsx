@@ -5,11 +5,16 @@ import EditForm from "./EditForm";
 import Notification from "../CommonComponents/Notification";
 import AddForm from "./AddForm";
 import DeleteConfirmation from "./DeleteConfirmation";
+import { GrFormNextLink } from "react-icons/gr";
+import { GrFormPreviousLink } from "react-icons/gr";
+
 
 const MainSection = () => {
   const [laptopData, setLaptopData] = useState([]);
   const [ServerMsg, setServerMsg] = useState();
   const [isError, setIsError] = useState(false);
+  const [page ,setPage] = useState(1);
+  const [totalPages , setTotalPages] = useState(1);
 
   // Edit states
   const [isEditFromOpen, setIsEditFormOpen] = useState(false);
@@ -50,7 +55,7 @@ const MainSection = () => {
 
   // get all laptops data
   const getLaptopData = async () => {
-    const responseObject = await fetch("http://localhost:3000/api/laptops", {
+    const responseObject = await fetch(`http://localhost:3000/api/laptops?page=${page}&limit=10`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -62,6 +67,7 @@ const MainSection = () => {
 
     console.log(data);
     setLaptopData(data.laptopData);
+    setTotalPages(data.pagination.totalPages);
   };
 
   // delete laptop
@@ -86,9 +92,23 @@ const MainSection = () => {
     setIsDeleteConfirmationOpen(false);
   };
 
+  // go to next page 
+  const getNextPage = ()=>{
+    setPage((p)=>{
+      return p+1;
+    })
+  }
+
+  // go to previous page
+  const getPreviousPage = ()=>{
+    setPage((p)=>{
+      return p-1;
+    })
+  }
+
   useEffect(() => {
     getLaptopData();
-  }, []);
+  }, [page]);
 
   return (
     <div className="flex-1 flex flex-col bg-[#272727] border-[0.8px] border-[#3d3d3d] rounded-4xl m-2 min-h-0">
@@ -174,6 +194,16 @@ const MainSection = () => {
             ))}
           </tbody>
         </table>
+
+        {totalPages <= 1 ? (
+          ""
+        ) : (
+          <div className="flex flex-row justify-center my-2 items-center">
+            <button onClick={getPreviousPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center"><GrFormPreviousLink className="text-2xl"/> Previous page</button>
+            <span>{page} / {totalPages}</span>
+            <button onClick={getNextPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center">Next page <GrFormNextLink className="text-2xl"/></button>
+          </div>
+        )}
       </div>
 
       {showNotification ? (

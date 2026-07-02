@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { LaptopContext } from "../../context/LaptopDataContext";
 
 const StatsSection = () => {
-  const { laptopData } = useContext(LaptopContext);
+  const { laptopData ,FullResponseFromServer} = useContext(LaptopContext);
   const [totalLaptops, setTotalLaptops] = useState(0);
   const [totalValue, setTotalValue] = useState(0);
   const [totalBrands, setTotalBrands] = useState(0);
@@ -11,33 +11,15 @@ const StatsSection = () => {
   // console.log(laptopData);
 
   const CalculateTotalLaptops = () => {
-    setTotalLaptops(laptopData.length);
-
-    console.log(laptopData.length);
+    setTotalLaptops(FullResponseFromServer?.stats?.totalLaptops || 0);
   };
 
   const CalculateTotalValue = () => {
-    const value = laptopData
-      .map((x) => {
-        return x.price;
-      })
-      .reduce((acc, curr) => {
-        acc = acc + curr;
-        return acc;
-      }, 0);
-
-    setTotalValue(value);
-    console.log(value);
+    setTotalValue(FullResponseFromServer?.stats?.totalPrice || 0);
   };
 
   const CalculateTotalBrands = () => {
-    const brandsData = laptopData.map((x) => {
-      return x.brand.trim();
-    });
-    const myset = new Set(brandsData);
-
-    setTotalBrands(myset.size);
-    console.log(myset.size);
+    setTotalBrands(FullResponseFromServer.stats.totalBrands);
   };
 
   useEffect(() => {

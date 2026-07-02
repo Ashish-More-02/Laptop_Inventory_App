@@ -1,19 +1,75 @@
 const Laptop = require("../models/LaptopModel");
 const { User } = require("../models/UserModel");
+const mongoose = require("mongoose");
 
 // logic to get all laptops for that user
 const getAllLaptops = async (req, res) => {
   // we are accessing userId from the request object cause the middleware added that to it.
   const userID = req.user.userId;
 
-  console.log(userID);
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, parseInt(req.query.limit) || 10);
 
-  const laptopData = await Laptop.find({ createdBy: userID });
+  const skip = (page - 1) * limit;
 
-  console.log(laptopData);
+  // console.log(userID);
+
+  // getting only the paged data ( and not complete data)
+  const laptopData = await Laptop.find({ createdBy: userID })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  // stats info for Stats cards in frontend - 
+  // note : this is inefficient to compute all the additional stats data evey time this api is called , 
+  // as it will be called everytime someone does next page or previous page , and stats don't need to be computed everytime , it just needs to be called maybe once the component mounts or page reloads.
+  // just add a new stats api Afterwards for better API optimisation.
+  const total = await Laptop.countDocuments({ createdBy: userID });
+  const result = await Laptop.aggregate([
+    {
+      // use to filter
+      $match: {
+        createdBy: new mongoose.Types.ObjectId(userID),
+      },
+    },
+    {
+      // use to group or sum
+      $group: {
+        _id: null,
+        total: { $sum: "$price" },
+      },
+    },
+  ]);
+
+  const totalValueOfLaptops = result[0]?.total || 0;
+  const brandsData = await Laptop.find({ createdBy: userID });
+  const brandsData2 = brandsData.map((x) => {
+    return x.brand.trim();
+  });
+
+  const mySet = new Set(brandsData2);
+
+  const totalBrands = mySet.size;
+
+  // console.log(laptopData);
 
   if (laptopData) {
-    return res.status(200).json({ laptopData });
+    return res.status(200).json({
+      laptopData,
+      pagination: {
+        page: page,
+        limit: limit,
+        totalLaptops: total,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page * limit < total,
+        hasPrevPage: page > 1,
+      },
+      stats:{
+        totalLaptops:total,
+        totalPrice:totalValueOfLaptops,
+        totalBrands:totalBrands
+      }
+    });
   } else {
     return res.status(500).json({
       error: "internal server error , while fetching all laptop data",

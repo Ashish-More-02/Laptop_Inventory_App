@@ -4,6 +4,7 @@ export const LaptopContext = createContext();
 
 export function LaptopDataProvider({ children }) {
   const [laptopData, setLaptopData] = useState("");
+  const [FullResponseFromServer ,setFullResponseFromServer] = useState("");
 
   // get all laptops data
   const getLaptopData = async () => {
@@ -18,6 +19,8 @@ export function LaptopDataProvider({ children }) {
     const data = await responseObject.json();
 
     setLaptopData(data.laptopData);
+
+    setFullResponseFromServer(data);
   };
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export function LaptopDataProvider({ children }) {
   }, []);
 
   return (
-    <LaptopContext.Provider value={{ laptopData }}>
+    <LaptopContext.Provider value={{ laptopData ,FullResponseFromServer}}>
       {children}
     </LaptopContext.Provider>
   );
