@@ -173,7 +173,7 @@ const updatePassword = async (req, res) => {
   }
 };
 
-// Sign in with google
+// Sign in with google, it shows google accounts and consent screen 
 const signinWithGoogle = async (req, res) => {
   const baseURL = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
@@ -195,7 +195,7 @@ const signinWithGoogle = async (req, res) => {
   // final string  = http://accounts.google.com/o/oauth2/v2/auth?client_id=...&redirect_uri=...&response_type=...&scope=...&state=...&access_type=...
 };
 
-// handle google callback
+// handle google callback ( main function to login or register the user)
 const handleGoogleCallback = async (req, res) => {
   // the above redirect url will give us this 'state' and 'code'.
   const state = req.query.state; // todo: Verify state matches what you sent (CSRF guard)
