@@ -163,7 +163,7 @@ const MainSection = () => {
                 </td>
                 <td className="px-4 py-3 flex flex-row justify-evenly">
                   <button
-                    className="bg-[#266ea1] p-2 rounded-lg cursor-pointer"
+                    className="bg-[#266ea1] p-2 rounded-lg cursor-pointer mr-2"
                     onClick={(e) => {
                       setLaptopID(laptop._id);
                       setName(laptop.name);
@@ -199,9 +199,9 @@ const MainSection = () => {
           ""
         ) : (
           <div className="flex flex-row justify-center my-2 items-center">
-            <button onClick={getPreviousPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center"><GrFormPreviousLink className="text-2xl"/> Previous page</button>
-            <span>{page} / {totalPages}</span>
-            <button onClick={getNextPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center">Next page <GrFormNextLink className="text-2xl"/></button>
+            <button onClick={getPreviousPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center text-nowrap"><GrFormPreviousLink className="text-2xl"/> Previous page</button>
+            <span className="text-nowrap">{page} / {totalPages}</span>
+            <button onClick={getNextPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center text-nowrap">Next page <GrFormNextLink className="text-2xl"/></button>
           </div>
         )}
       </div>

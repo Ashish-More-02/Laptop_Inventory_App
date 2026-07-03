@@ -33,7 +33,7 @@ const Profile = () => {
 
       <div className="">
         <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row text-xl mb-4 items-center">
+          <div className="flex flex-row text-lg sm:text-xl mb-4 items-center">
             <p>Name: </p>
             <div className="bg-[#202020] px-4 py-1 rounded-xl ml-4">
               {userData?.name}
@@ -44,19 +44,28 @@ const Profile = () => {
             onClick={() => {
               setIsUpdateFormOpen(true);
             }}
-            className="text-lg rounded-3xl px-3 py-1 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer ml-4"
+            className="hidden sm:block text-nowrap text-lg rounded-3xl px-3 py-1 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer ml-4"
           >
             update name
           </button>
         </div>
 
-        <div className="flex flex-row text-xl mt-2">
+        <div className="flex flex-row text-lg sm:text-xl mt-2">
           <p>Email: </p>
           <div className="bg-[#202020] px-4 py-1 rounded-xl ml-4">
             {userData?.email}
           </div>
         </div>
       </div>
+
+      <button
+            onClick={() => {
+              setIsUpdateFormOpen(true);
+            }}
+            className="block sm:hidden text-nowrap text-lg rounded-3xl px-3 py-1 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mt-4 w-full"
+          >
+            update name
+      </button>
 
       {isUpdateFormOpen ? (
         <NameUpdateForm

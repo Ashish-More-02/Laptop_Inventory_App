@@ -26,18 +26,27 @@ const Security = () => {
       <h2 className="font-semibold text-2xl mb-4 text-blue-300">Security</h2>
 
       <div className="">
-        <div className="flex flex-row justify-between text-xl">
+        <div className="flex flex-row justify-between items-center text-lg sm:text-xl">
           Update your password securely using this button
           <button
             onClick={() => {
               setIsUpdatePasswordFormOpen(true);
             }}
-            className="rounded-3xl px-3 py-1 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer ml-4 text-lg"
+            className="hidden sm:block text-nowrap rounded-3xl px-3 py-1 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer ml-4 text-lg"
           >
             Update Password
           </button>
         </div>
       </div>
+
+      <button
+        onClick={() => {
+          setIsUpdatePasswordFormOpen(true);
+        }}
+        className="block sm:hidden text-nowrap rounded-3xl px-3 py-1 bg-[#2b5285] border-[1px] border-[#396296] cursor-pointer mt-4 text-lg w-full"
+      >
+        Update Password
+      </button>
 
       {isUpdatePasswordFormOpen ? (
         <PasswordUpdateForm

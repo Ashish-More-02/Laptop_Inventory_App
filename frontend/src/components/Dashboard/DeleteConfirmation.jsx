@@ -9,7 +9,7 @@ const DeleteConfirmation = ({setIsDeleteConfirmationOpen ,deleteLaptop,laptopID}
 
       {/* Add form */}
       <form
-        className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] rounded-3xl p-4 mx-auto mt-[20%] relative z-20"
+        className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] rounded-3xl p-4 mx-auto mt-[60%] sm:mt-[20%] relative z-20"
       >
         <div className="flex flex-row justify-between">
           <h1 className="font-bold text-xl">Delete Laptop</h1>

@@ -21,7 +21,7 @@ const Sidebar = ({ActiveState}) => {
   const baseItem = "rounded-2xl px-4 py-2 text-lg cursor-pointer flex items-center";
 
   return (
-    <div className="w-[18%] max-w-[320px] bg-[#174160] rounded-4xl px-2 py-4">
+    <div className="hidden sm:block w-[18%] max-w-[320px] bg-[#174160] rounded-4xl px-2 py-4">
       <div className="grid grid-cols-1 gap-4">
         <div
           onClick={handleDashboardClick}
