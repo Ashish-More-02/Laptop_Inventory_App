@@ -24,9 +24,11 @@ const AddForm = ({
     setAddStorage(0);
   };
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // Add New laptop
   const addLaptop = async () => {
-    const responseObject = await fetch("http://localhost:3000/api/addlaptop", {
+    const responseObject = await fetch(`${BASE_URL}/api/addlaptop`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

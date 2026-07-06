@@ -6,9 +6,11 @@ export function LaptopDataProvider({ children }) {
   const [laptopData, setLaptopData] = useState("");
   const [FullResponseFromServer ,setFullResponseFromServer] = useState("");
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // get all laptops data
   const getLaptopData = async () => {
-    const responseObject = await fetch("http://localhost:3000/api/laptops", {
+    const responseObject = await fetch(`${BASE_URL}/api/laptops`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -6,8 +6,10 @@ import { AuthContext } from "../../../context/AuthContext";
 const NameUpdateForm = ({ setIsUpdateFormOpen, setUpdatedName, name ,notify }) => {
   const { refreshUserData } = useContext(AuthContext);
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const updateName = async () => {
-    const responseObj = await fetch("http://localhost:3000/updatename", {
+    const responseObj = await fetch(`${BASE_URL}/updatename`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

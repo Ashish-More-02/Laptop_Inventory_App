@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 
-const DB_PASSWORD = process.env.DB_PASSWORD;
-
-
 // localhost connection string
 const MONGO_DB_CONNECTION_URL = process.env.MONGO_DB_CONNECTION_URL;
+// Cloud connection string
+const MONGO_DB_CLOUD_CONNECTION_URL = process.env.MONGO_DB_CLOUD_CONNECTION_URL;
 
 function connectDB() {
   // connecting to mongodb with a new project and cluster
   mongoose
-    .connect(MONGO_DB_CONNECTION_URL)
+    .connect(MONGO_DB_CLOUD_CONNECTION_URL)
     .then(() => {
       console.log("mongodb connected successfully!");
     })

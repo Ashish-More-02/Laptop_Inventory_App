@@ -13,13 +13,15 @@ const PasswordUpdateForm = ({
 }) => {
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const UpdatePassword = async () => {
     const isPasswordValid = validatePassword(password);
 
     if (isPasswordValid == false) {
       return;
     } else {
-      const responseObj = await fetch("http://localhost:3000/updatepassword", {
+      const responseObj = await fetch(`${BASE_URL}/updatepassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

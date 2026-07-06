@@ -11,7 +11,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 // Middlewares for index.js file
-app.use(cors({origin: "http://localhost:5173"}));
+app.use(cors({origin: process.env.FRONTEND_URL}));
 app.use(express.json());
 
 app.get("/hello", (req, res) => {

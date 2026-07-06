@@ -17,10 +17,12 @@ const EditForm = ({
   const [ram, setRam] = useState(myram);
   const [storage, setStorage] = useState(mystorage);
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // Edit laptop data
   const EditLaptop = async (id) => {
     const responseObject = await fetch(
-      `http://localhost:3000/api/updatelaptop/${id}`,
+      `${BASE_URL}/api/updatelaptop/${id}`,
       {
         method: "PUT",
         headers: {

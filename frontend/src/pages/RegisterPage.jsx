@@ -16,6 +16,8 @@ const RegisterPage = () => {
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
 
   const navigate = useNavigate();
+  
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ const RegisterPage = () => {
       return;
     }
 
-    fetch("http://localhost:3000/signup", {
+    fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

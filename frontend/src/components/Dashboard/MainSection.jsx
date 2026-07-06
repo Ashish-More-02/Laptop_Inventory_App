@@ -40,6 +40,8 @@ const MainSection = () => {
   // notification state
   const [showNotification, setShowNotification] = useState(false);
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // central notification trigger — lives here so it survives the EditForm closing
   const notify = (data, isErr) => {
     setServerMsg(data.message || data.error || data.err || "");
@@ -55,7 +57,7 @@ const MainSection = () => {
 
   // get all laptops data
   const getLaptopData = async () => {
-    const responseObject = await fetch(`http://localhost:3000/api/laptops?page=${page}&limit=10`, {
+    const responseObject = await fetch(`${BASE_URL}/api/laptops?page=${page}&limit=10`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +75,7 @@ const MainSection = () => {
   // delete laptop
   const deleteLaptop = async (id) => {
     const responseObject = await fetch(
-      `http://localhost:3000/api/deletelaptop/${id}`,
+      `${BASE_URL}/api/deletelaptop/${id}`,
       {
         method: "DELETE",
         headers: {

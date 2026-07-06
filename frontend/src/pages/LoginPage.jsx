@@ -21,10 +21,12 @@ const LoginPage = () => {
   // this is a React component which needs to be returned from a function to work
   // <Navigate to="/dashboard"></Navigate>
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const handleSignIn = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:3000/signin", {
+    fetch(`${BASE_URL}/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

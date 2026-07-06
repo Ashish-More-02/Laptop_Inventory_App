@@ -12,6 +12,8 @@ export function AuthProvider({ children }) {
   const [userEmail, setUserEmail] = useState();
   const [userData, setUserData] = useState();
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // using post method : unsafe
   const getUserEmail = async () => {
     const tokenPayload = JSON.parse(
@@ -21,7 +23,7 @@ export function AuthProvider({ children }) {
     console.log(userID);
 
     // message sent to backend.
-    const ResponseObject = await fetch("http://localhost:3000/getuseremail", {
+    const ResponseObject = await fetch(`${BASE_URL}/getuseremail`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // issue here was i coverted the UserID data to json but the complete body object is still javascript, that is the issue.
@@ -42,7 +44,7 @@ export function AuthProvider({ children }) {
     if (!localStorage.getItem("token")) {
       return;
     } else {
-      const responseObj = await fetch("http://localhost:3000/me", {
+      const responseObj = await fetch(`${BASE_URL}/me`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
