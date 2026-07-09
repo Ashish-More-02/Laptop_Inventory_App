@@ -36,7 +36,7 @@ fetch(`${BASE_URL}/signin`, ...)
 
 ### Blocker 3: production URLs must be registered in two more places
 - **CORS:** your backend allows `origin: "http://localhost:5173"`. It must also allow
-  your deployed frontend URL. Make it an env var (`CLIENT_URL`).
+  your deployed frontend URL. Make it an env var (`FRONTEND_URL`).
 - **Google OAuth:** add your production redirect URI + JS origin in Google Cloud
   Console, or Google sign-in will `redirect_uri_mismatch`.
 
