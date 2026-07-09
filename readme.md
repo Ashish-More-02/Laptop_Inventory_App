@@ -7,6 +7,8 @@ hands-on, production-minded learning project (not a tutorial clone).
 > **Status:** 🚧 In active development. Auth, landing page, and protected routing
 > are done; the laptop dashboard (CRUD UI) is in progress.
 
+⚡️ live link: https://laptop-inventory-app1.onrender.com/
+
 ---
 
 ## ✨ Features
