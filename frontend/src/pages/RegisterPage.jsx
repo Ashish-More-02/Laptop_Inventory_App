@@ -191,7 +191,7 @@ const RegisterPage = () => {
         </div>
 
         <a
-          href="http://localhost:3000/auth/google"
+          href={`${BASE_URL}/auth/google`}
           className="flex flex-row justify-center items-center mt-4 w-full px-4 py-2 text-xl bg-[#121212] rounded-xl cursor-pointer"
         >
           <img className="h-6 mr-2" src={googleIcon} alt="Google logo" />
