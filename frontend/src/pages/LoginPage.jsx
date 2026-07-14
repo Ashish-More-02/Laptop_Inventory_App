@@ -6,12 +6,20 @@ import { MdLaptop } from "react-icons/md";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import googleIcon from "../assets/google-icon.png";
+import { validateEmail } from "../utils/validators";
+import { Oval } from "react-loader-spinner";
+import { MdErrorOutline } from "react-icons/md";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [emailErrorMsg, setEmailErrorMsg] = useState("");
+  const [msgBackgrounColor, setMsgBackgroundColor] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const { login } = useContext(AuthContext);
 
@@ -25,6 +33,19 @@ const LoginPage = () => {
 
   const handleSignIn = (e) => {
     e.preventDefault();
+
+    // validate before hitting the API
+    const emailError = validateEmail(email);
+
+    setEmailErrorMsg(emailError);
+
+    if (emailError) {
+      setMsgBackgroundColor("bg-[rgb(252,107,78)]");
+      setMessage("Invalid Email or Password, please try again");
+      return;
+    }
+
+    setIsLoading(true);
 
     fetch(`${BASE_URL}/signin`, {
       method: "POST",
@@ -50,12 +71,20 @@ const LoginPage = () => {
         // localStorage.setItem("token", data.token);
         login(data.token);
         // success message after the token is stored in localstorage
+        setIsError(false);
+        setMsgBackgroundColor("bg-[rgb(75,163,70)]");
         setMessage("Login Successful!");
-        navigate("/dashboard");
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate("/dashboard");
+        }, 1500);
       })
       .catch((err) => {
         console.error(err.message);
         // error message
+        setIsError(true);
+        setIsLoading(false);
+        setMsgBackgroundColor("bg-[rgb(201,86,62)]");
         setMessage("Login Failed, please try again");
       });
   };
@@ -95,7 +124,15 @@ const LoginPage = () => {
             value={email}
             placeholder="example@email.com"
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => {
+              setEmailErrorMsg(validateEmail(email));
+            }}
           />
+          {emailErrorMsg ? (
+            <div className="text-red-400">{emailErrorMsg}</div>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="mt-4 flex flex-col justify-between relative">
@@ -116,10 +153,25 @@ const LoginPage = () => {
 
         <div className="mt-10 flex items-center justify-center w-full ">
           <button
-            className="w-full px-4 py-2 text-xl bg-[#b0b0b0] text-black rounded-xl cursor-pointer"
+            className="text-center w-full px-4 py-2 text-xl bg-[#b0b0b0] text-black rounded-xl cursor-pointer"
             type="submit"
           >
-            Login
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <Oval
+                  height={24}
+                  width={24}
+                  color="#000"
+                  secondaryColor="#888"
+                  strokeWidth={4}
+                  visible={true}
+                  ariaLabel="oval-loading"
+                />
+                <span className="ml-2"> getting things ready</span>
+              </div>
+            ) : (
+              "Login"
+            )}
           </button>
         </div>
 
@@ -150,8 +202,20 @@ const LoginPage = () => {
       </form>
 
       {message ? (
-        <div className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] h-[80px] rounded-3xl p-4 mx-auto mt-4">
-          {message}
+        <div
+          className={`${msgBackgrounColor} border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] h-[80px] rounded-3xl p-4 mx-auto mt-4 flex items-center justify-center`}
+        >
+          {isError ? (
+            <>
+              <MdErrorOutline className="text-xl mr-2" />
+              {message}
+            </>
+          ) : (
+            <>
+              <FaRegCheckCircle className="text-xl mr-2" />
+              {message}
+            </>
+          )}
         </div>
       ) : (
         ""

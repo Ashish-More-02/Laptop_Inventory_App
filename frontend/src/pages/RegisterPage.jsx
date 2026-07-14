@@ -5,6 +5,10 @@ import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { MdLaptop } from "react-icons/md";
 import googleIcon from "../assets/google-icon.png";
+import { validateEmail, validatePassword } from "../utils/validators";
+import { Oval } from "react-loader-spinner";
+import { MdErrorOutline } from "react-icons/md";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -14,22 +18,31 @@ const RegisterPage = () => {
   const [message, setMessage] = useState("");
   const [emailErrorMsg, setEmailErrorMsg] = useState("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
+  const [msgBackgrounColor, setMsgBackgroundColor] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  
+
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const handleRegister = (e) => {
     e.preventDefault();
 
-    const isEmailValid = validateEmail(email);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
 
-    const isPasswordValid = validatePassword(password);
+    setEmailErrorMsg(emailError);
+    setPasswordErrorMsg(passwordError);
 
-    if (!isEmailValid || !isPasswordValid) {
+    if (emailError || passwordError) {
+      setIsError(true);
+      setMsgBackgroundColor("bg-[rgb(201,86,62)]");
       setMessage("Invalid Email or Password , please try again");
       return;
     }
+
+    setIsLoading(true);
 
     fetch(`${BASE_URL}/signup`, {
       method: "POST",
@@ -47,49 +60,28 @@ const RegisterPage = () => {
           return res.json();
         } else {
           // error state
-          setMessage("Registration failed, invlaid credentials");
           throw new Error("Registration failed, invlaid credentials");
         }
       })
       .then((data) => {
         // success state
-        setMessage("Registration Successful!");
-        navigate("/login");
+        setIsLoading(false);
+        setIsError(false);
+        setMsgBackgroundColor("bg-[rgb(75,163,70)]"); // green
+        setMessage("Account creation Successful!");
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate("/login");
+        }, 1500);
       })
       .catch((err) => {
+        setIsLoading(false);
+        setIsError(true);
+        setMsgBackgroundColor("bg-[rgb(201,86,62)]"); // red
+        setMessage("Registration failed, invlaid credentials");
         console.error(err.message);
       });
   };
-
-  // check email , return true or false
-  function validateEmail(email) {
-    const emailRegex = /^\S+@\S+\.\S{2,3}$/;
-    if (!emailRegex.test(email)) {
-      // failed condition
-      setEmailErrorMsg("Invalid email, please try again");
-      return false;
-    } else {
-      setEmailErrorMsg("");
-      return true;
-    }
-  }
-
-
-  // check password ,return true or false
-  function validatePassword(pass) {
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-
-    if (!passwordRegex.test(pass)) {
-      setPasswordErrorMsg(
-        "Invalid password, a password should have at least 6 characters, 1 uppercase, 1 lowercase, 1 special char and 1 number",
-      );
-      return false;
-    } else {
-      setPasswordErrorMsg("");
-      return true;
-    }
-  }
 
   const handleShowPassword = (e) => {
     e.preventDefault();
@@ -137,11 +129,15 @@ const RegisterPage = () => {
             value={email}
             placeholder="example@email.com"
             onChange={(e) => setEmail(e.target.value)}
-            onBlur={()=>{
-              validateEmail(email)
+            onBlur={() => {
+              setEmailErrorMsg(validateEmail(email));
             }}
           />
-          {emailErrorMsg? <div className="text-red-400">{emailErrorMsg}</div>:""}
+          {emailErrorMsg ? (
+            <div className="text-red-400">{emailErrorMsg}</div>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="mt-4 flex-col justify-between relative">
@@ -151,8 +147,8 @@ const RegisterPage = () => {
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onBlur={()=>{
-              validatePassword(password)
+            onBlur={() => {
+              setPasswordErrorMsg(validatePassword(password));
             }}
           />
           <div
@@ -161,7 +157,11 @@ const RegisterPage = () => {
           >
             {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
-          {passwordErrorMsg? <div className="text-red-400">{passwordErrorMsg}</div>:""}
+          {passwordErrorMsg ? (
+            <div className="text-red-400">{passwordErrorMsg}</div>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="mt-10 flex items-center justify-center w-full ">
@@ -169,7 +169,22 @@ const RegisterPage = () => {
             className="w-full px-4 py-2 text-xl bg-[#b0b0b0] text-black rounded-xl cursor-pointer"
             type="submit"
           >
-            Register
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <Oval
+                  height={24}
+                  width={24}
+                  color="#000"
+                  secondaryColor="#888"
+                  strokeWidth={4}
+                  visible={true}
+                  ariaLabel="oval-loading"
+                />
+                <span className="ml-2"> creating your account</span>
+              </div>
+            ) : (
+              "Register"
+            )}
           </button>
         </div>
 
@@ -200,8 +215,20 @@ const RegisterPage = () => {
       </form>
 
       {message ? (
-        <div className="bg-[#1b1c1c] border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] h-[80px] rounded-3xl p-4 mx-auto mt-4">
-          {message}
+        <div
+          className={`${msgBackgrounColor} border-[0.8px] border-[#333333] w-[95%] sm:w-[450px] h-[80px] rounded-3xl p-4 mx-auto mt-4 flex items-center justify-center`}
+        >
+          {isError ? (
+            <>
+              <MdErrorOutline className="text-xl mr-2" />
+              {message}
+            </>
+          ) : (
+            <>
+              <FaRegCheckCircle className="text-xl mr-2" />
+              {message}
+            </>
+          )}
         </div>
       ) : (
         ""
