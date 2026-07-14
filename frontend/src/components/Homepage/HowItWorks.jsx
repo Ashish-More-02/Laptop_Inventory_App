@@ -8,6 +8,9 @@ const HowItWorks = () => {
   return (
     <div className="rounded-4xl bg-[#4e4e4e] border-[0.8px] border-[#333333] mt-6 mx-2 p-4 h-full">
       <h2 className="text-4xl text-center mt-4">How It works</h2>
+      <p className="text-center text-[#d0d0d0] mt-2">
+        Get up and running in three simple steps.
+      </p>
 
       {/* steps section */}
       <div className="grid md:grid-cols-3 gap-6 mt-6 sm:px-6">

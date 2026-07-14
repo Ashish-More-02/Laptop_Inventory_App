@@ -7,6 +7,9 @@ const ProductPreview = () => {
       <h2 className="text-4xl text-center mt-4">
         Your Whole inventory, one screen
       </h2>
+      <p className="text-center text-[#b0b0b0] mt-2">
+        A clean dashboard that puts every laptop at your fingertips.
+      </p>
       <img className="border-[1px] border-[rgb(172,172,172)] rounded-xl sm:rounded-4xl mx-auto mt-10 sm:w-[92%] sm:h-[700px] md:h-full object-cover shadow-2xl/60 shadow-[rgb(230,230,230)]" src={DashboardPreview} alt="Dashboard preview image" />
     </div>
   );

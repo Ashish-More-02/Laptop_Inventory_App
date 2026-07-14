@@ -52,6 +52,19 @@ const Navbar = () => {
     checkUserLoginAndTokenExpiry();
   }, []);
 
+  // smooth-scroll to a homepage section by its id, leaving a 100px gap
+  // at the top so the sticky navbar doesn't cover the section heading
+  const scrollToSection = (id) => {
+    setToggleMenu(false);
+    const section = document.getElementById(id);
+    if (section) {
+      const offset = 100;
+      const top =
+        section.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="sticky top-0 rounded-4xl backdrop-blur-lg bg-[#292929c6] border-[0.8px]  border-[#333333] m-2">
       <div className="flex justify-between h-[60px] sm:h-[80px]">
@@ -69,25 +82,35 @@ const Navbar = () => {
         {/* quick links - center */}
         <ul className="hidden sm:flex justify-between items-center w-[30%]">
           <div className="relative">
-            <li className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]">
+            <li
+              onClick={() => scrollToSection("features")}
+              className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
+            >
               Features
             </li>
           </div>
 
           <div className="relative">
-            <li className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]">
+            <li
+              className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
+            >
               Pricing
             </li>
           </div>
 
           <div className="relative">
-            <li className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]">
+            <li
+              onClick={() => scrollToSection("contact")}
+              className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
+            >
               Contact us
             </li>
           </div>
 
           <div className="relative">
-            <li className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]">
+            <li
+              className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
+            >
               About us
             </li>
           </div>
@@ -141,16 +164,28 @@ const Navbar = () => {
         <div className="mb-2">
           <ul className="flex flex-col justify-between w-full">
             <hr className="w-[94vw] mx-2 border-[1px] border-[#333333]" />
-            <li className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2">
+            <li
+              onClick={() => scrollToSection("features")}
+              className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2"
+            >
               Features
             </li>
-            <li className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2">
+            <li
+              onClick={() => scrollToSection("pricing")}
+              className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2"
+            >
               Pricing
             </li>
-            <li className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2">
+            <li
+              onClick={() => scrollToSection("contact")}
+              className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2"
+            >
               Contact us
             </li>
-            <li className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2">
+            <li
+              onClick={() => scrollToSection("about")}
+              className="cursor-pointer hover:bg-[#232323] rounded-4xl px-4 py-2"
+            >
               About us
             </li>
           </ul>

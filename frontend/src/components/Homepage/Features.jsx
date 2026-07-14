@@ -12,6 +12,9 @@ const Features = () => {
   return (
     <div className="rounded-4xl bg-[#292929] border-[0.8px] border-[#333333] mt-6 mx-2 p-4 h-full">
       <h2 className="text-4xl text-center mt-4">Why Use this</h2>
+      <p className="text-center text-[#b0b0b0] mt-2">
+        Everything you need to keep your laptops organised.
+      </p>
 
       {/* <hr className="border-[1px] mt-4 border-[#525252]"/> */}
 
