@@ -7,14 +7,14 @@ import AddForm from "./AddForm";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { GrFormNextLink } from "react-icons/gr";
 import { GrFormPreviousLink } from "react-icons/gr";
-
+import { Oval } from "react-loader-spinner";
 
 const MainSection = () => {
   const [laptopData, setLaptopData] = useState([]);
   const [ServerMsg, setServerMsg] = useState();
   const [isError, setIsError] = useState(false);
-  const [page ,setPage] = useState(1);
-  const [totalPages , setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Edit states
   const [isEditFromOpen, setIsEditFormOpen] = useState(false);
@@ -37,6 +37,15 @@ const MainSection = () => {
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
     useState(false);
 
+  // Empty state
+  const [isEmpty, setIsEmpty] = useState(false);
+
+  // loading State
+  const [isLoading, setIsLoading] = useState(false);
+
+  // error states
+  const [isFailedToFetchData, setIsFailedToFetchData] = useState(false);
+
   // notification state
   const [showNotification, setShowNotification] = useState(false);
 
@@ -57,33 +66,48 @@ const MainSection = () => {
 
   // get all laptops data
   const getLaptopData = async () => {
-    const responseObject = await fetch(`${BASE_URL}/api/laptops?page=${page}&limit=10`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
-
-    const data = await responseObject.json();
-
-    console.log(data);
-    setLaptopData(data.laptopData);
-    setTotalPages(data.pagination.totalPages);
-  };
-
-  // delete laptop
-  const deleteLaptop = async (id) => {
+    setIsLoading(true);
     const responseObject = await fetch(
-      `${BASE_URL}/api/deletelaptop/${id}`,
+      `${BASE_URL}/api/laptops?page=${page}&limit=10`,
       {
-        method: "DELETE",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       },
     );
+
+    if (responseObject.ok) {
+      setIsFailedToFetchData(false);
+      const data = await responseObject.json();
+
+      console.log(data);
+      setIsLoading(false);
+
+      if (data.stats.totalLaptops == 0) {
+        setIsEmpty(true);
+      } else {
+        setIsEmpty(false);
+      }
+
+      setLaptopData(data.laptopData);
+      setTotalPages(data.pagination.totalPages);
+    } else {
+      setIsLoading(false);
+      setIsFailedToFetchData(true);
+    }
+  };
+
+  // delete laptop
+  const deleteLaptop = async (id) => {
+    const responseObject = await fetch(`${BASE_URL}/api/deletelaptop/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
 
     const data = await responseObject.json();
 
@@ -94,19 +118,19 @@ const MainSection = () => {
     setIsDeleteConfirmationOpen(false);
   };
 
-  // go to next page 
-  const getNextPage = ()=>{
-    setPage((p)=>{
-      return p+1;
-    })
-  }
+  // go to next page
+  const getNextPage = () => {
+    setPage((p) => {
+      return p + 1;
+    });
+  };
 
   // go to previous page
-  const getPreviousPage = ()=>{
-    setPage((p)=>{
-      return p-1;
-    })
-  }
+  const getPreviousPage = () => {
+    setPage((p) => {
+      return p - 1;
+    });
+  };
 
   useEffect(() => {
     getLaptopData();
@@ -128,82 +152,141 @@ const MainSection = () => {
       </div>
       {/* table wrapper for rounded corners */}
       <div className="mt-4 mx-2 rounded-4xl overflow-y-auto border border-[#333] flex-1 min-h-0 scrollbar-thumb-[#575757]">
-        {/* laptop data table */}
-        <table className="w-full text-left border-collapse">
-          {/* table head */}
-          <thead className="sticky top-0">
-            <tr className="bg-[#464646]">
-              <th className="px-4 py-3 ">Sr.no</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Brand</th>
-              <th className="px-4 py-3">Ram</th>
-              <th className="px-4 py-3">Storage</th>
-              <th className="px-4 py-3">Price</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          {/* table body */}
-          <tbody className="p-2">
-            {laptopData.map((laptop, i) => (
-              <tr
-                className=" border-b border-[#333] hover:bg-[#2f2f2f] transition-colors"
-                key={laptop._id}
-              >
-                <td className="px-4 py-3">{i + 1}</td>
-                <td className="px-4 py-3">{laptop.name ? laptop.name : ""}</td>
-                <td className="px-4 py-3">
-                  {laptop.brand ? laptop.brand : ""}
-                </td>
-                <td className="px-4 py-3">
-                  {laptop.specs?.ram ? laptop.specs.ram : ""}
-                </td>
-                <td className="px-4 py-3">
-                  {laptop.specs?.Storage ? laptop.specs.Storage : ""}
-                </td>
-                <td className="px-4 py-3">
-                  ${laptop.price ? laptop.price : ""}
-                </td>
-                <td className="px-4 py-3 flex flex-row justify-evenly">
-                  <button
-                    className="bg-[#266ea1] p-2 rounded-lg cursor-pointer mr-2"
-                    onClick={(e) => {
-                      setLaptopID(laptop._id);
-                      setName(laptop.name);
-                      setBrand(laptop.brand);
-                      setRam(laptop.specs.ram);
-                      setStorage(laptop.specs.Storage);
-                      setPrice(laptop.price);
-
-                      // open the Edit form
-                      setIsEditFormOpen(true);
-                    }}
+        {isLoading || isFailedToFetchData || isEmpty ? (
+          <div className="flex flex-col justify-center items-center bg-[#494949] mt-10 w-[95%] mx-auto py-10 rounded-3xl text-center">
+            {isEmpty ? (
+              <>
+                <span className="text-3xl mb-2">💻</span>
+                <span className="font-medium">No laptops yet</span>
+                <span className="text-sm text-[#b0b0b0] mt-1">
+                  Click “+ Add” to add your first laptop.
+                </span>
+                <button
+                  className="bg-[#22943b] border border-[#3fb058] border-[0.8px] px-4 py-1 rounded-xl cursor-pointer"
+                  onClick={() => {
+                    setIsAddFormOpen(true);
+                  }}
+                >
+                  + Add
+                </button>
+              </>
+            ) : (
+              <div className="flex justify-center items-center">
+                {isFailedToFetchData ? (
+                  "⚠️"
+                ) : (
+                  <Oval
+                    height={24}
+                    width={24}
+                    color="#000"
+                    secondaryColor="#888"
+                    strokeWidth={4}
+                    visible={true}
+                    ariaLabel="oval-loading"
+                  />
+                )}
+                <span className="ml-4">
+                  {isFailedToFetchData
+                    ? "Some Error occured, plese try again!"
+                    : "Loading your data..."}
+                </span>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* laptop data table */}
+            <table className="w-full text-left border-collapse">
+              {/* table head */}
+              <thead className="sticky top-0">
+                <tr className="bg-[#464646]">
+                  <th className="px-4 py-3 ">Sr.no</th>
+                  <th className="px-4 py-3">Name</th>
+                  <th className="px-4 py-3">Brand</th>
+                  <th className="px-4 py-3">Ram</th>
+                  <th className="px-4 py-3">Storage</th>
+                  <th className="px-4 py-3">Price</th>
+                  <th className="px-4 py-3">Actions</th>
+                </tr>
+              </thead>
+              {/* table body */}
+              <tbody className="p-2">
+                {laptopData.map((laptop, i) => (
+                  <tr
+                    className=" border-b border-[#333] hover:bg-[#2f2f2f] transition-colors"
+                    key={laptop._id}
                   >
-                    <FiEdit3 />
-                  </button>
-                  <button
-                    className="bg-[#aa2d17] p-2 rounded-lg cursor-pointer"
-                    onClick={() => {
-                      setLaptopID(laptop._id);
+                    <td className="px-4 py-3">{i + 1}</td>
+                    <td className="px-4 py-3">
+                      {laptop.name ? laptop.name : ""}
+                    </td>
+                    <td className="px-4 py-3">
+                      {laptop.brand ? laptop.brand : ""}
+                    </td>
+                    <td className="px-4 py-3">
+                      {laptop.specs?.ram ? laptop.specs.ram : ""}
+                    </td>
+                    <td className="px-4 py-3">
+                      {laptop.specs?.Storage ? laptop.specs.Storage : ""}
+                    </td>
+                    <td className="px-4 py-3">
+                      ${laptop.price ? laptop.price : ""}
+                    </td>
+                    <td className="px-4 py-3 flex flex-row justify-evenly">
+                      <button
+                        className="bg-[#266ea1] p-2 rounded-lg cursor-pointer mr-2"
+                        onClick={(e) => {
+                          setLaptopID(laptop._id);
+                          setName(laptop.name);
+                          setBrand(laptop.brand);
+                          setRam(laptop.specs.ram);
+                          setStorage(laptop.specs.Storage);
+                          setPrice(laptop.price);
 
-                      // open the delete confirmation dialog box
-                      setIsDeleteConfirmationOpen(true);
-                    }}
-                  >
-                    <FiDelete />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                          // open the Edit form
+                          setIsEditFormOpen(true);
+                        }}
+                      >
+                        <FiEdit3 />
+                      </button>
+                      <button
+                        className="bg-[#aa2d17] p-2 rounded-lg cursor-pointer"
+                        onClick={() => {
+                          setLaptopID(laptop._id);
+
+                          // open the delete confirmation dialog box
+                          setIsDeleteConfirmationOpen(true);
+                        }}
+                      >
+                        <FiDelete />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
 
         {totalPages <= 1 ? (
           ""
         ) : (
           <div className="flex flex-row justify-center my-2 items-center">
-            <button onClick={getPreviousPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center text-nowrap"><GrFormPreviousLink className="text-2xl"/> Previous page</button>
-            <span className="text-nowrap">{page} / {totalPages}</span>
-            <button onClick={getNextPage} className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center text-nowrap">Next page <GrFormNextLink className="text-2xl"/></button>
+            <button
+              onClick={getPreviousPage}
+              className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center text-nowrap"
+            >
+              <GrFormPreviousLink className="text-2xl" /> Previous page
+            </button>
+            <span className="text-nowrap">
+              {page} / {totalPages}
+            </span>
+            <button
+              onClick={getNextPage}
+              className="bg-[#464646] px-4 py-1 rounded-xl mx-3 cursor-pointer flex flex-row items-center text-nowrap"
+            >
+              Next page <GrFormNextLink className="text-2xl" />
+            </button>
           </div>
         )}
       </div>
