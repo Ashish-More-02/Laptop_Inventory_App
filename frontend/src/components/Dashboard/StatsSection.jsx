@@ -33,17 +33,17 @@ const StatsSection = () => {
   return (
     <div className="shrink-0 sm:h-[20vh] bg-[#272727] border-[0.8px] border-[#3d3d3d] rounded-4xl flex flex-col">
       <div className="grid grid-cols-3 p-4 flex-1 gap-4">
-        <div className="bg-blue-200 h-full w-full rounded-3xl flex flex-col items-center justify-evenly text-black text-xl sm:text-2xl font-semibold px-2 py-1">
-          <p className="text-center">Total laptops</p>
-          <div className="text-indigo-800 text-2xl">{totalLaptops}</div>
+        <div className="bg-blue-200 h-full w-full rounded-3xl flex flex-col items-center justify-evenly text-black text-md sm:text-2xl font-semibold px-2 py-1">
+          <p className="text-center">laptops</p>
+          <div className="text-indigo-800 text-lg sm:text-2xl">{totalLaptops}</div>
         </div>
-        <div className="bg-blue-200 h-full w-full rounded-3xl flex flex-col items-center justify-evenly text-black text-xl sm:text-2xl font-semibold px-2 py-1">
+        <div className="bg-blue-200 h-full w-full rounded-3xl flex flex-col items-center justify-evenly text-black text-md sm:text-2xl font-semibold px-2 py-1">
           <p>Value</p>
-          <div className="text-indigo-800 text-2xl">$ {totalValue}</div>
+          <div className="text-indigo-800 text-lg sm:text-2xl">$ {totalValue}</div>
         </div>
-        <div className="bg-blue-200 h-full w-full rounded-3xl flex flex-col items-center justify-evenly text-black text-xl sm:text-2xl font-semibold px-2 py-1">
+        <div className="bg-blue-200 h-full w-full rounded-3xl flex flex-col items-center justify-evenly text-black text-md sm:text-2xl font-semibold px-2 py-1">
           <p>Brands</p>
-          <div className="text-indigo-800 text-2xl">{totalBrands}</div>
+          <div className="text-indigo-800 text-lg sm:text-2xl">{totalBrands}</div>
         </div>
       </div>
     </div>

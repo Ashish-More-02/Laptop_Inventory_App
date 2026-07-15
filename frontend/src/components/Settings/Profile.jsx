@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import NameUpdateForm from "./Forms/NameUpdateFrom";
 import Notification from "../CommonComponents/Notification";
+import { LuCircleUserRound } from "react-icons/lu";
 
 const Profile = () => {
   const { userData } = useContext(AuthContext);
@@ -30,7 +31,9 @@ const Profile = () => {
 
   return (
     <div className="flex-1 min-h-0 w-full mt-2 mb-4 rounded-3xl bg-[#4e4e4e] px-6 py-4">
-      <h2 className="font-semibold text-2xl mb-4 text-blue-300">Profile</h2>
+      <h2 className="font-semibold text-2xl mb-4 text-blue-300 flex flex-row items-center"><LuCircleUserRound className="mr-2 text-white" /> Profile</h2>
+      
+      <hr className="text-[#787878] h-1 mb-2"/>
 
       <div className="">
         <div className="flex flex-row justify-between items-center">

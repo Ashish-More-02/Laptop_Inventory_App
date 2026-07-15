@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PasswordUpdateForm from "./Forms/PasswordUpdateForm";
 import Notification from "../CommonComponents/Notification";
+import { LuShieldCheck } from "react-icons/lu";
 
 const Security = () => {
   const [isUpdatePasswordFormOpen, setIsUpdatePasswordFormOpen] = useState(false);
@@ -23,8 +24,10 @@ const Security = () => {
 
   return (
     <div className="flex-1 min-h-0 w-full my-2 rounded-3xl bg-[#4e4e4e] px-6 py-4">
-      <h2 className="font-semibold text-2xl mb-4 text-blue-300">Security</h2>
-
+      <h2 className="font-semibold text-2xl mb-4 text-blue-300 flex flex-row items-center"><LuShieldCheck className="mr-2 text-white" /> Security</h2>
+      
+      <hr className="text-[#787878] h-1 mb-2"/>
+      
       <div className="">
         <div className="flex flex-row justify-between items-center text-lg sm:text-xl">
           Update your password securely using this button
