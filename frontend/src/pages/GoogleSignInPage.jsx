@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const GoogleSignInPage = () => {
   const navigate = useNavigate();
+  const {login} = useContext(AuthContext);
 
   const handleCallback = () => {
     const url = window.location.href;
@@ -17,7 +19,7 @@ const GoogleSignInPage = () => {
     const token = urlParams.get("token");
 
     if (token) {
-      localStorage.setItem("token", token);
+      login(token);
       navigate("/dashboard");
     }
   };

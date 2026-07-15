@@ -30,7 +30,7 @@ export function LaptopDataProvider({ children }) {
   }, []);
 
   return (
-    <LaptopContext.Provider value={{ laptopData ,FullResponseFromServer}}>
+    <LaptopContext.Provider value={{ laptopData ,FullResponseFromServer,getLaptopDataForStats:getLaptopData}}>
       {children}
     </LaptopContext.Provider>
   );

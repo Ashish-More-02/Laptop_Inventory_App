@@ -8,6 +8,7 @@ import Notification from "../CommonComponents/Notification";
 
 const Profile = () => {
   const { userData } = useContext(AuthContext);
+  console.log(userData);
 
   // update name form states
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);

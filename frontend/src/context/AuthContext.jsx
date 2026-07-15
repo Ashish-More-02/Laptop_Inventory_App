@@ -52,6 +52,11 @@ export function AuthProvider({ children }) {
         },
       });
 
+      if (!responseObj.ok) {
+        setUserData(undefined);
+        return;
+      }
+
       const data = await responseObj.json();
 
       console.log(data);
@@ -62,7 +67,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // getUserEmail();
     getUserData();
-  }, []);
+  }, [isUserLoggedIn]);
 
   const login = (token) => {
     localStorage.setItem("token", token);

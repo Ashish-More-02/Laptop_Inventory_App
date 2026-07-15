@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import { FiDelete } from "react-icons/fi";
 import EditForm from "./EditForm";
@@ -8,8 +8,10 @@ import DeleteConfirmation from "./DeleteConfirmation";
 import { GrFormNextLink } from "react-icons/gr";
 import { GrFormPreviousLink } from "react-icons/gr";
 import { Oval } from "react-loader-spinner";
+import { LaptopContext } from "../../context/LaptopDataContext";
 
 const MainSection = () => {
+  const {getLaptopDataForStats} = useContext(LaptopContext);
   const [laptopData, setLaptopData] = useState([]);
   const [ServerMsg, setServerMsg] = useState();
   const [isError, setIsError] = useState(false);
@@ -61,6 +63,8 @@ const MainSection = () => {
     // on a successful operation, refetch so the table reflects the new data
     if (!isErr) {
       getLaptopData();
+      // call this fuction so that stats data can refresh again : probably a duplicate network call here , but optimisation for later.
+      getLaptopDataForStats();
     }
   };
 
