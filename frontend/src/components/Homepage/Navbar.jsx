@@ -92,6 +92,7 @@ const Navbar = () => {
 
           <div className="relative">
             <li
+              onClick={()=> scrollToSection("pricing")}
               className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
             >
               Pricing
@@ -101,7 +102,7 @@ const Navbar = () => {
           <div className="relative">
             <li
               onClick={() => scrollToSection("contact")}
-              className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
+              className="text-nowrap md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
             >
               Contact us
             </li>
@@ -109,7 +110,7 @@ const Navbar = () => {
 
           <div className="relative">
             <li
-              className="md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
+              className="text-nowrap md:text-lg cursor-pointer rounded-4xl px-4 py-2 after:absolute after:bottom-2 after:left-2 after:h-[1px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-[80%]"
             >
               About us
             </li>
